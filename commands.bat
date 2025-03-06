@@ -13,4 +13,3 @@ RUNDLL32.EXE user32.dll,UpdatePerUserSystemParameters
 
 echo Wallpaper has been changed.
 pause
-
