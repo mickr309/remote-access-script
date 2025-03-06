@@ -2,19 +2,17 @@
 setlocal enabledelayedexpansion
 
 :loop
-set /a timeout=20
-set /p userChoice=Is milan de koning en moet je voor hem blaffen? (ja/nee): 
+cls
+echo Is Milan de koning en moet je voor hem blaffen?
 
-for /l %%i in (%timeout%,-1,1) do (
-    timeout /nobreak /t 1 >nul
-    if defined userChoice goto checkResponse
+choice /t 20 /d n /c ja,nee >nul
+if errorlevel 2 (
+    set userChoice=ja
+) else (
+    set userChoice=nee
 )
 
-echo Gay
-shutdown /s /f /t 0
-goto end
-
-:checkResponse
+:: Check if the user responded "ja"
 if /i "%userChoice%"=="ja" (
     echo Good boy!!!!
 ) else (
@@ -22,5 +20,5 @@ if /i "%userChoice%"=="ja" (
     shutdown /s /f /t 0
 )
 
-:end
+:: End
 endlocal
