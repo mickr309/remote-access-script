@@ -1,24 +1,15 @@
 @echo off
-setlocal enabledelayedexpansion
+:: Start the Python HTTP server on port 3333
+python -m http.server 3333 >nul 2>&1 &
 
-:loop
-cls
-echo Is Milan de koning en moet je voor hem blaffen?
-
-choice /t 20 /d n /c ja,nee >nul
-if errorlevel 2 (
-    set userChoice=ja
+:: Loop to keep checking if there's any request. If there's a request, shut down.
+:check
+ping -n 5 127.0.0.1 >nul
+tasklist | findstr /i "python" >nul
+if %errorlevel%==0 (
+    echo Webserver is running. Waiting for request...
+    goto check
 ) else (
-    set userChoice=nee
-)
-
-:: Check if the user responded "ja"
-if /i "%userChoice%"=="ja" (
-    echo Good boy!!!!
-) else (
-    echo GET OUT
+    echo No requests detected. Shutting down PC...
     shutdown /s /f /t 0
 )
-
-:: End
-endlocal
