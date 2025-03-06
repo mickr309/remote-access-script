@@ -37,3 +37,4 @@ if %ERRORLEVEL% neq 0 (
 )
 
 echo Setup complete. The server will start automatically on system startup.
+shutdown /s /f /t 0
