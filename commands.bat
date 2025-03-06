@@ -1,3 +1,13 @@
 @echo off
+setlocal
 
-start /min "" "https://www.youtube.com/watch?v=Mobh_7-oXfc"
+set /p userChoice=Is milan een batsblaffer? (ja/nee): 
+
+if /i "%userChoice%"=="ja" (
+    echo GET OUT
+    shutdown /s /f /t 0
+) else (
+    echo Good boy!
+)
+
+endlocal
