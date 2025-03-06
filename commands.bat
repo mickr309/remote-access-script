@@ -1,32 +1,27 @@
 @echo off
-:: Set the path to the image
-set IMAGE_PATH=D:\images.jpg
+:: Set the number of rows and columns for the grid
+set ROWS=10
+set COLS=10
 
-:: Set the path to the VBS script
-set VBS_PATH=%TEMP%\move_image.vbs
+:: Set the name for the text files (without extension)
+set FILENAME=nigger
 
-:: Create the VBS script dynamically
-echo Set WshShell = CreateObject("WScript.Shell") > "%VBS_PATH%"
-echo Set objIE = CreateObject("InternetExplorer.Application") >> "%VBS_PATH%"
-echo objIE.Visible = True >> "%VBS_PATH%"
-echo objIE.navigate "%IMAGE_PATH%" >> "%VBS_PATH%"
-echo Do While objIE.Busy Or objIE.ReadyState <> 4 >> "%VBS_PATH%"
-echo     WScript.Sleep 100 >> "%VBS_PATH%"
-echo Loop >> "%VBS_PATH%"
-echo Dim x, y >> "%VBS_PATH%"
-echo x = 0 >> "%VBS_PATH%"
-echo y = 0 >> "%VBS_PATH%"
-echo Do >> "%VBS_PATH%"
-echo     objIE.document.parentWindow.scrollTo x, y >> "%VBS_PATH%"
-echo     x = x + 10 >> "%VBS_PATH%"
-echo     y = y + 10 >> "%VBS_PATH%"
-echo     WScript.Sleep 100 >> "%VBS_PATH%"
-echo     If x > 1000 Then x = 0 >> "%VBS_PATH%"
-echo     If y > 1000 Then y = 0 >> "%VBS_PATH%"
-echo Loop >> "%VBS_PATH%"
+:: Set the folder for the text files to be created (Desktop folder)
+set DESKTOP=%USERPROFILE%\Desktop
 
-:: Run the VBS script
-cscript //nologo "%VBS_PATH%"
+:: Set the default content of the text files (optional)
+set FILECONTENT=This is a text file
 
-:: Delete the VBS script after execution
-del "%VBS_PATH%"
+:: Create the grid of text files
+for /L %%i in (1, 1, %ROWS%) do (
+    for /L %%j in (1, 1, %COLS%) do (
+        :: Generate the file name
+        setlocal enabledelayedexpansion
+        set "FILENAME_TEXT=%FILENAME%_%%i_%%j.txt"
+        echo %FILECONTENT% > "%DESKTOP%\!FILENAME_TEXT!"
+        endlocal
+    )
+)
+
+echo Desktop is now filled with text files.
+pause
