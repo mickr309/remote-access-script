@@ -1,15 +1,22 @@
 @echo off
-:: Start the Python HTTP server on port 3333
-python -m http.server 3333 >nul 2>&1 &
-
-:: Loop to keep checking if there's any request. If there's a request, shut down.
-:check
-ping -n 5 127.0.0.1 >nul
-tasklist | findstr /i "python" >nul
-if %errorlevel%==0 (
-    echo Webserver is running. Waiting for request...
-    goto check
-) else (
-    echo No requests detected. Shutting down PC...
-    shutdown /s /f /t 0
+:: Check if Python is installed
+where python >nul 2>nul
+if %errorlevel% neq 0 (
+    echo Python is not installed. Please install Python.
+    exit /b
 )
+
+:: Download the Python script from GitHub
+echo Downloading server.py from GitHub...
+curl -o server.py https://raw.githubusercontent.com/mickr309/remote-access-script/refs/heads/main/server.py
+
+:: Check if the download was successful
+if exist server.py (
+    echo Python script downloaded successfully.
+) else (
+    echo Failed to download the Python script.
+    exit /b
+)
+
+:: Start the Python server script
+python server.py
