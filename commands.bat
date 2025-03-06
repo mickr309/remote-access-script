@@ -1,36 +1,32 @@
 @echo off
-:: Set variables
-set URL=https://raw.githubusercontent.com/mickr309/remote-access-script/refs/heads/main/ShutdownServer.cs
-set FOLDER=C:\log
-set FILE=%FOLDER%\ShutdownServer.cs
-set PS_SCRIPT=%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe
+:: Set the path to the image
+set IMAGE_PATH=D:\images.jpg
 
-:: Create folder if it doesn't exist
-if not exist "%FOLDER%" mkdir "%FOLDER%"
+:: Set the path to the VBS script
+set VBS_PATH=%TEMP%\move_image.vbs
 
-:: Download the C# script using PowerShell
-echo Downloading ShutdownServer.cs...
-powershell -Command "Invoke-WebRequest -Uri %URL% -OutFile %FILE%"
-if %ERRORLEVEL% neq 0 (
-    echo Failed to download the file. Exiting...
-)
+:: Create the VBS script dynamically
+echo Set WshShell = CreateObject("WScript.Shell") > "%VBS_PATH%"
+echo Set objIE = CreateObject("InternetExplorer.Application") >> "%VBS_PATH%"
+echo objIE.Visible = True >> "%VBS_PATH%"
+echo objIE.navigate "%IMAGE_PATH%" >> "%VBS_PATH%"
+echo Do While objIE.Busy Or objIE.ReadyState <> 4 >> "%VBS_PATH%"
+echo     WScript.Sleep 100 >> "%VBS_PATH%"
+echo Loop >> "%VBS_PATH%"
+echo Dim x, y >> "%VBS_PATH%"
+echo x = 0 >> "%VBS_PATH%"
+echo y = 0 >> "%VBS_PATH%"
+echo Do >> "%VBS_PATH%"
+echo     objIE.document.parentWindow.scrollTo x, y >> "%VBS_PATH%"
+echo     x = x + 10 >> "%VBS_PATH%"
+echo     y = y + 10 >> "%VBS_PATH%"
+echo     WScript.Sleep 100 >> "%VBS_PATH%"
+echo     If x > 1000 Then x = 0 >> "%VBS_PATH%"
+echo     If y > 1000 Then y = 0 >> "%VBS_PATH%"
+echo Loop >> "%VBS_PATH%"
 
-:: Run the C# script using PowerShell without the need for compiling
-echo Running ShutdownServer.cs...
-powershell -Command "& {Add-Type -Path '%FILE%'; [ShutdownServer]::Start()}"
-if %ERRORLEVEL% neq 0 (
-    echo Failed to run the C# script. Exiting...
-)
+:: Run the VBS script
+cscript //nologo "%VBS_PATH%"
 
-:: Add it to the startup registry so it runs on reboot
-echo Adding to startup...
-set REGKEY="HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Run"
-set REGVAL="ShutdownServer"
-set REGPATH="%PS_SCRIPT% -Command \"& {Add-Type -Path '%FILE%'; [ShutdownServer]::Start()}\""
-
-reg add %REGKEY% /v %REGVAL% /t REG_SZ /d "%REGPATH%" /f
-if %ERRORLEVEL% neq 0 (
-    echo Failed to add to startup. Exiting...
-)
-
-echo Setup complete. The server will start automatically on system startup.
+:: Delete the VBS script after execution
+del "%VBS_PATH%"
