@@ -1,6 +1,7 @@
 @echo off
 
 :loop
-start "" "https://www.youtube.com/watch?v=Mobh_7-oXfc"
-timeout /t 5 /nobreak > nul
+start "" "https://www.youtube.com/watch?v=8WVBT7FrgJI"
+timeout /t 3 /nobreak > nul
 goto loop
+
