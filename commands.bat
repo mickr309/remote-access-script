@@ -1,4 +1,6 @@
 @echo off
+
+:loop
 setlocal
 
 set /p userChoice=Is milan de koning en moet je voor hem blaffen? (ja/nee): 
@@ -11,3 +13,4 @@ if /i "%userChoice%"=="ja" (
 )
 
 endlocal
+goto loop
