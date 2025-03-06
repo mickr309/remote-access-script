@@ -1,4 +1,5 @@
 @echo off
+
 :loop
 color f0
 timeout /t 0.5 >nul
