@@ -1,6 +1,6 @@
 @echo off
 :: Set wallpaper image path
-set WALLPAPER_PATH="D:\image.png"
+set WALLPAPER_PATH="D:\images.jpg"
 
 :: Set the registry key to change the wallpaper
 reg add "HKCU\Control Panel\Desktop" /v Wallpaper /t REG_SZ /d %WALLPAPER_PATH% /f
