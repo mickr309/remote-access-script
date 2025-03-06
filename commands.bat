@@ -1,3 +1,7 @@
 @echo off
 :loop
-start "" "C:\Program Files\VideoLAN\VLC\vlc.exe" --volume 256 --loop --play-and-exit "D:\music.mp3"
+color f0
+timeout /t 0.5 >nul
+color 0f
+timeout /t 0.5 >nul
+goto loop
