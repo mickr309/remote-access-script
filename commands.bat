@@ -37,11 +37,4 @@ reg add "HKCU\Control Panel\Desktop" /v WallpaperStyle /t REG_SZ /d 2 /f
 :: Refresh the desktop to apply the change
 RUNDLL32.EXE user32.dll,UpdatePerUserSystemParameters
 
-echo Wallpaper has been changed.
-:loop
-msg * "Bing chilling"
-goto loop
-
-
-
 pause
